@@ -218,17 +218,11 @@ When running `Dev Containers: Add Dev Container Configuration Files...`, you'll 
 
 ### Popular Features
 
-- **ghcr.io/devcontainers/features/node** - Node.js
-- **ghcr.io/devcontainers/features/python** - Python
-- **ghcr.io/devcontainers/features/go** - Go
-- **ghcr.io/devcontainers/features/git** - Git
-- **ghcr.io/devcontainers/features/github-cli** - GitHub CLI
-- **ghcr.io/devcontainers/features/docker-in-docker** - Docker inside container
-- **ghcr.io/devcontainers/features/kubectl-helm-minikube** - Kubernetes tools
-- **ghcr.io/devcontainers/features/aws-cli** - AWS CLI
-- **ghcr.io/devcontainers/features/azure-cli** - Azure CLI
-
-Browse all Features at: https://containers.dev/features
+Browse all at https://containers.dev/features:
+- **node, python, go, rust, java, dotnet** - Language runtimes
+- **git, github-cli, azure-cli, aws-cli** - CLI tools  
+- **docker-in-docker, kubectl-helm-minikube** - Container/K8s tools
+- **common-utils** - Essential utilities (zsh, oh-my-zsh, etc.)
 
 ### Pinning Feature Versions
 
@@ -275,6 +269,74 @@ You can create your own Features using the [feature-starter template](https://gi
 2. Select container from list
 
 ## Advanced Configuration
+
+### Monorepos: Multiple Devcontainers
+
+**Important Limitation:** Multi-root workspaces (`.code-workspace` files) open **all folders in the same container**. To use different containers per package, open each folder separately.
+
+**Pattern 1: Separate Package Containers** (different tech stacks)
+
+```
+monorepo/
+├── apps/
+│   ├── frontend/.devcontainer/devcontainer.json
+│   └── backend/.devcontainer/devcontainer.json
+```
+
+**Frontend (.devcontainer/devcontainer.json):**
+```json
+{
+  "name": "Frontend",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "workspaceFolder": "/workspaces/monorepo/apps/frontend",
+  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspaces/monorepo,type=bind"
+}
+```
+
+**Workflow:** 
+- Single package: Right-click `frontend/` → "Open Folder in Container"
+- Multiple packages: Open separate VS Code windows, one per package
+
+**Pattern 2: Unified Polyglot Container** (all tools in one)
+
+```json
+{
+  "name": "Monorepo All",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {"version": "20"},
+    "ghcr.io/devcontainers/features/python:1": {"version": "3.11"},
+    "ghcr.io/devcontainers/features/go:1": {}
+  }
+}
+```
+
+**Pattern 3: Docker Compose Multi-Container** (services in separate containers)
+
+Use Docker Compose when packages need to run simultaneously (frontend + backend + db):
+
+```yaml
+services:
+  frontend:
+    build: ./apps/frontend
+    volumes: [".:/workspace:cached"]
+  backend:
+    build: ./apps/backend
+    volumes: [".:/workspace:cached"]
+  db:
+    image: postgres:14
+```
+
+```json
+{
+  "name": "Monorepo",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "frontend",
+  "workspaceFolder": "/workspace"
+}
+```
+
+**Choose "frontend" or "backend" as primary `service`**. Access other containers via `docker exec` or attach in separate windows.
 
 ### Using Docker Compose
 
@@ -394,67 +456,38 @@ Use strings for simple commands, arrays for args, or objects for multiple comman
 
 ## Using the Dev Container CLI
 
-The Dev Container CLI (`@devcontainers/cli`) allows you to work with dev containers outside of VS Code.
-
-### Installation
+The Dev Container CLI (`@devcontainers/cli`) works with devcontainers outside VS Code:
 
 ```bash
 npm install -g @devcontainers/cli
-```
 
-### Common Commands
-
-```bash
-# Build a dev container
-devcontainer build --workspace-folder .
-
-# Open a dev container
+# Build and start container
 devcontainer up --workspace-folder .
 
-# Execute a command in the container
+# Execute command
 devcontainer exec --workspace-folder . npm test
 
-# Apply a template
-devcontainer templates apply --workspace-folder . \
-  --template-id ghcr.io/devcontainers/templates/typescript-node:latest
-
-# List available templates
-devcontainer templates list
+# Apply template
+devcontainer templates apply --workspace-folder . --template-id <id>
 ```
 
 ## CI/CD Integration
 
-Use dev containers in CI/CD pipelines for consistent testing environments.
-
-### GitHub Actions
-
-Use the [devcontainers/ci](https://github.com/devcontainers/ci) action:
-
+**GitHub Actions** ([devcontainers/ci](https://github.com/devcontainers/ci)):
 ```yaml
 name: CI
 on: [push]
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Build and run dev container
-        uses: devcontainers/ci@v0.3
+      - uses: devcontainers/ci@v0.3
         with:
           runCmd: npm test
 ```
 
-### Azure DevOps
-
-Install the Dev Containers task from the marketplace and use:
-
-```yaml
-- task: DevContainers@0
-  inputs:
-    runCmd: 'npm test'
-```
+**Azure DevOps**: Use Dev Containers task: `DevContainers@0` with `runCmd: 'npm test'`
 
 ## Resources
 
