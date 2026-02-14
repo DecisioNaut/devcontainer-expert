@@ -4,28 +4,43 @@ An Agent Skill providing expert guidance for working with Development Containers
 
 ## Description
 
-This skill provides comprehensive knowledge and step-by-step instructions for creating, configuring, and troubleshooting development containers. It covers the full devcontainer ecosystem including Templates, Features, Docker integration, and VS Code workflows.
+This skill provides comprehensive knowledge and step-by-step instructions for creating, configuring, and troubleshooting development containers. It covers the full devcontainer ecosystem including Templates, Features, Docker integration, VS Code workflows, and advanced topics like pre-building, Kubernetes, networking, and security.
+
+**Level 2 Architecture**: Core patterns in [SKILL.md](SKILL.md) with in-depth coverage in [references/](references/).
 
 ## What You'll Learn
 
+### Core Topics (SKILL.md)
 - **Core Concepts**: Understanding development containers and when to use them
 - **Configuration**: Creating and customizing devcontainer.json files
-- **Templates**: Using pre-built templates for common tech stacks
-- **Features**: Adding tools and runtimes with dev container Features
-- **Integration**: Working with Docker, Docker Compose, and VS Code
-- **Advanced Topics**: Lifecycle scripts, custom mounts, environment variables
-- **Troubleshooting**: Solving common devcontainer issues
-- **CI/CD**: Using devcontainers in GitHub Actions and Azure DevOps
+- **Templates & Features**: Using pre-built templates and adding tools with Features
+- **Monorepos**: Multiple devcontainer strategies for monorepo projects
+- **Docker Integration**: Docker Compose, non-root users, custom mounts
+- **Common Workflows**: Open in container, clone in volume, rebuild, attach
+- **Quick Troubleshooting**: Common issues and solutions
+
+### Advanced Topics (references/)
+- **[Pre-building Images](references/PREBUILDING.md)**: Image caching, CI/CD workflows, supply-chain security
+- **[Kubernetes Integration](references/KUBERNETES.md)**: Attach to K8s pods, cluster development workflows
+- **[Networking Fundamentals](references/NETWORKING.md)**: Docker network modes, port forwarding, DNS, proxies
+- **[Advanced Networking](references/NETWORKING_ADVANCED.md)**: VPN, network security, service mesh, load balancing
+- **[Volume Performance](references/VOLUME_PERFORMANCE.md)**: Optimize disk performance on Windows/macOS
+- **[Container-in-Container](references/CONTAINER_IN_CONTAINER.md)**: Docker-in-Docker for CI/CD testing
+- **[Security Hardening](references/SECURITY.md)**: Non-root users, secrets management, capabilities
+- **[Dotfiles & Personalization](references/DOTFILES.md)**: Shell customization, tool configuration
+- **[Recovery & Debugging](references/RECOVERY_DEBUGGING.md)**: Fix build failures, inspect containers
 
 ## Installation
 
 ### For Agents
 
-If you're an AI agent, simply read the [SKILL.md](SKILL.md) file to access all the devcontainer expertise.
+Read [SKILL.md](SKILL.md) for core devcontainer patterns and common workflows. For advanced topics (pre-building, Kubernetes, networking, security, etc.), consult the specialized guides in [references/](references/).
 
 ### For Human Developers
 
-This skill is designed for AI agents, but humans can also use it as a comprehensive reference guide. Read [SKILL.md](SKILL.md) for detailed instructions on working with devcontainers.
+This skill is designed for AI agents, but humans can also use it as a comprehensive reference guide:
+- Start with [SKILL.md](SKILL.md) for core concepts and workflows
+- Explore [references/](references/) for in-depth coverage of advanced scenarios
 
 ## Prerequisites
 
@@ -61,17 +76,27 @@ Here's a simple devcontainer.json to get started:
 
 ## Topics Covered
 
+### Core Topics (SKILL.md)
 - ✅ devcontainer.json configuration
 - ✅ Templates and Features
 - ✅ Docker and Docker Compose integration
+- ✅ Monorepo strategies (multiple containers)
 - ✅ VS Code workflows and commands
 - ✅ Lifecycle scripts (onCreate, postCreate, postStart, etc.)
-- ✅ Port forwarding and networking
+- ✅ Port forwarding and networking basics
 - ✅ Environment variables and mounts
 - ✅ Git credentials sharing
-- ✅ CI/CD integration
 - ✅ Common troubleshooting scenarios
-- ✅ Best practices and security
+
+### Advanced Topics (references/)
+- ✅ Pre-building images for CI/CD
+- ✅ Kubernetes pod attachment
+- ✅ Custom Docker networks and DNS
+- ✅ Volume performance optimization
+- ✅ Docker-in-Docker (container-in-container)
+- ✅ Security hardening and secrets management
+- ✅ Dotfiles and personalization
+- ✅ Recovery containers and debugging
 
 ## Resources
 
@@ -86,12 +111,16 @@ Here's a simple devcontainer.json to get started:
 
 This is an Agent Skill following the [Agent Skills Specification](https://agentskills.io/). 
 
+**Level 2 Architecture**: This skill uses a Level 2 structure with core patterns in SKILL.md (~450 lines) and advanced topics in references/ (~300-650 lines each).
+
 To contribute:
 1. Fork this repository
-2. Make your changes to SKILL.md
-3. Ensure the skill stays under 500 lines
-4. Test that instructions are clear and actionable
-5. Submit a pull request
+2. For core patterns: Edit [SKILL.md](SKILL.md) (keep focused ~400-500 lines)
+3. For advanced topics: Add or edit files in [references/](references/)
+4. Ensure clear, actionable instructions with examples
+5. Add appropriate cross-references between files
+6. Test that all links work
+7. Submit a pull request
 
 ## License
 
@@ -104,9 +133,10 @@ This skill follows the [Agent Skills Specification v1.0](https://agentskills.io/
 - ✅ Structured YAML frontmatter with required fields
 - ✅ Progressive disclosure (skill discovery via name/description)
 - ✅ Clear activation criteria
-- ✅ Comprehensive but focused instructions
-- ✅ Under 500 lines for optimal agent processing
+- ✅ Level 2 architecture (main file ~475 lines + references/)
+- ✅ Comprehensive coverage via specialized reference files
 - ✅ Actionable, step-by-step guidance
+- ✅ Cross-referenced for easy navigation
 
 ## Feedback
 

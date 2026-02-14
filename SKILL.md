@@ -3,7 +3,7 @@ name: devcontainer-expert
 description: Expert guidance for Development Containers (devcontainers) in VS Code. Create, configure, and manage devcontainer.json files, use Templates and Features, integrate with Docker/Docker Compose, and troubleshoot common issues. Use when working with devcontainers, containerized development environments, or when user mentions devcontainer.json, dev containers, VS Code containers, or Docker development.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   author: devcontainer-expert contributors
 compatibility: Requires Docker (Docker Desktop on Mac/Windows or Docker CE/EE on Linux), VS Code with Dev Containers extension
 ---
@@ -338,6 +338,22 @@ services:
 
 **Choose "frontend" or "backend" as primary `service`**. Access other containers via `docker exec` or attach in separate windows.
 
+## Advanced Topics
+
+For in-depth coverage of advanced scenarios, see the [references/](references/) directory:
+
+- **[Pre-building Images](references/PREBUILDING.md)** - Image caching, CI/CD workflows, supply-chain security
+- **[Kubernetes Integration](references/KUBERNETES.md)** - Attach to K8s pods, cluster development
+- **[Networking Fundamentals](references/NETWORKING.md)** - Docker network modes, port forwarding, DNS, proxies
+- **[Advanced Networking](references/NETWORKING_ADVANCED.md)** - VPN, network security, service mesh, load balancing
+- **[Volume Performance](references/VOLUME_PERFORMANCE.md)** - Optimize disk performance on Windows/macOS
+- **[Container-in-Container](references/CONTAINER_IN_CONTAINER.md)** - Docker-in-Docker for CI/CD testing
+- **[Security Hardening](references/SECURITY.md)** - Non-root users, secrets management, capabilities
+- **[Dotfiles & Personalization](references/DOTFILES.md)** - Shell customization, tool configuration
+- **[Recovery & Debugging](references/RECOVERY_DEBUGGING.md)** - Fix build failures, inspect containers
+
+## Advanced Configuration (Quick Reference)
+
 ### Using Docker Compose
 
 **docker-compose.yml:**
@@ -365,21 +381,16 @@ services:
 }
 ```
 
-### Non-Root User
+### Non-Root User (See [SECURITY.md](references/SECURITY.md))
 
 ```json
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
-  "remoteUser": "node",
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "username": "node"
-    }
-  }
+  "remoteUser": "node"
 }
 ```
 
-### Custom Mounts and Environment
+### Custom Mounts and Environment (See [SECURITY.md](references/SECURITY.md))
 
 ```json
 {
@@ -393,87 +404,33 @@ services:
 }
 ```
 
-### Lifecycle Scripts
+## Troubleshooting (Quick Reference)
 
-```json
-{
-  "onCreateCommand": "echo 'First time setup'",
-  "updateContentCommand": "npm install",
-  "postCreateCommand": "npm run setup",
-  "postStartCommand": "npm run start-services"
-}
-```
+For comprehensive debugging guides, see [references/RECOVERY_DEBUGGING.md](references/RECOVERY_DEBUGGING.md).
 
-Use strings for simple commands, arrays for args, or objects for multiple commands.
+**Common Issues:**
 
-## Troubleshooting
-
-**Docker Not Running**: Ensure Docker Desktop is running; check `docker ps` works. On Linux: `sudo systemctl status docker`
-
-**Port Already in Use**: Check with `lsof -i :<port>` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows). Change port or stop conflicting service.
-
-**Slow File Performance (Windows/macOS)**: Use `Clone Repository in Container Volume` instead of bind mounts. Add `:cached` or `:delegated` flags to mounts.
-
-**Extension Not Working**: Add to `customizations.vscode.extensions` in devcontainer.json and rebuild container. Check extension docs for additional dependencies.
-
-**Changes Not Applied**: Run `Dev Containers: Rebuild Container` or `Rebuild Container Without Cache` for Dockerfile changes.
-
-**Git Credentials Not Working**: VS Code forwards credentials automatically. For SSH, mount: `"mounts": ["source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,readonly,type=bind"]`
-
-**Permission Denied**: Set `remoteUser` in devcontainer.json. Use `common-utils` Feature for proper user setup.
-
-**Container Build Fails**: Check logs with `Dev Containers: Show Container Log`. Test Dockerfile separately: `docker build -f .devcontainer/Dockerfile .`
-
-**OutOfMemory Error**: Increase Docker memory in settings. Use multi-stage builds and run `docker system prune` to free space.
+- **Docker Not Running**: Check `docker ps` works. On Linux: `sudo systemctl status docker`
+- **Port Already in Use**: Find process with `lsof -i :<port>` (macOS/Linux) or `netstat -ano | findstr :<port>` (Windows)
+- **Slow Performance**: See [VOLUME_PERFORMANCE.md](references/VOLUME_PERFORMANCE.md) for optimization strategies  
+- **Build Failures**: Use `Dev Containers: Reopen in Recovery Container` to debug. See [RECOVERY_DEBUGGING.md](references/RECOVERY_DEBUGGING.md)
+- **Permission Errors**: Set `remoteUser` or see [SECURITY.md](references/SECURITY.md) for non-root configuration
 
 ## Best Practices
 
-1. **Version Control devcontainer.json**: Always commit your `.devcontainer/` folder so all developers use the same environment
+1. **Version Control** - Commit `.devcontainer/` so all developers use the same environment
+2. **Use Official Images** - Start with `mcr.microsoft.com/devcontainers/` for reliability
+3. **Pin Versions** - Lock Feature and base image versions for reproducibility
+4. **Security** - Run as non-root, avoid committing secrets. See [SECURITY.md](references/SECURITY.md)
+5. **Performance** - Use volume mounts on Windows/macOS. See [VOLUME_PERFORMANCE.md](references/VOLUME_PERFORMANCE.md)
+6. **Test Regularly** - Ensure new team members can build containers from scratch
+7. **Document** - Add comments explaining custom configurations
 
-2. **Use Pre-built Images**: Start with official images from `mcr.microsoft.com/devcontainers/` for faster builds
+## Pre-building and CI/CD
 
-3. **Layer Features Thoughtfully**: Add most common/stable Features first, more volatile ones last
+Pre-building images improves startup time and enables CI/CD integration. See [references/PREBUILDING.md](references/PREBUILDING.md) for comprehensive guides.
 
-4. **Pin Versions**: Pin Feature and base image versions for reproducibility
-
-5. **Minimize Image Size**: Use multi-stage builds and clean up package caches
-
-6. **Security**:
-   - Run as non-root user when possible
-   - Keep base images updated
-   - Don't commit secrets in devcontainer.json (use environment variables or mounts)
-
-7. **Performance**:
-   - Use volume mounts for better performance on Windows/macOS
-   - Leverage layer caching in Dockerfiles
-   - Use `postCreateCommand` for expensive one-time setup
-
-8. **Documentation**: Add comments to devcontainer.json explaining custom configurations
-
-9. **Test Regularly**: Periodically test that new developers can build the container from scratch
-
-10. **Use .dockerignore**: Exclude unnecessary files from Docker build context
-
-## Using the Dev Container CLI
-
-The Dev Container CLI (`@devcontainers/cli`) works with devcontainers outside VS Code:
-
-```bash
-npm install -g @devcontainers/cli
-
-# Build and start container
-devcontainer up --workspace-folder .
-
-# Execute command
-devcontainer exec --workspace-folder . npm test
-
-# Apply template
-devcontainer templates apply --workspace-folder . --template-id <id>
-```
-
-## CI/CD Integration
-
-**GitHub Actions** ([devcontainers/ci](https://github.com/devcontainers/ci)):
+**Quick Example (GitHub Actions):**
 ```yaml
 name: CI
 on: [push]
@@ -484,10 +441,13 @@ jobs:
       - uses: actions/checkout@v3
       - uses: devcontainers/ci@v0.3
         with:
+          imageName: ghcr.io/${{ github.repository }}-devcontainer
+          cacheFrom: ghcr.io/${{ github.repository }}-devcontainer
+          push: always
           runCmd: npm test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-**Azure DevOps**: Use Dev Containers task: `DevContainers@0` with `runCmd: 'npm test'`
 
 ## Resources
 
