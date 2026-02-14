@@ -10,3 +10,9 @@ __pycache__/
 *.swo
 *~
 .idea/
+
+# Build artifacts
+VALIDATION.md
+PLANNING.md
+*.tmp
+.validation-cache/
