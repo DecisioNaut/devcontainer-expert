@@ -2,6 +2,8 @@
 
 An Agent Skill providing expert guidance for working with Development Containers (devcontainers) in VS Code.
 
+**Repository**: https://github.com/DecisioNaut/devcontainer-expert
+
 ## Description
 
 This skill provides comprehensive knowledge and step-by-step instructions for creating, configuring, and troubleshooting development containers. It covers the full devcontainer ecosystem including Templates, Features, Docker integration, VS Code workflows, and advanced topics like pre-building, Kubernetes, networking, and security.
@@ -114,7 +116,7 @@ This is an Agent Skill following the [Agent Skills Specification](https://agents
 **Level 2 Architecture**: This skill uses a Level 2 structure with core patterns in SKILL.md (~450 lines) and advanced topics in references/ (~300-650 lines each).
 
 To contribute:
-1. Fork this repository
+1. Fork the repository: https://github.com/DecisioNaut/devcontainer-expert
 2. For core patterns: Edit [SKILL.md](SKILL.md) (keep focused ~400-500 lines)
 3. For advanced topics: Add or edit files in [references/](references/)
 4. Ensure clear, actionable instructions with examples
@@ -140,7 +142,7 @@ This skill follows the [Agent Skills Specification v1.0](https://agentskills.io/
 
 ## Feedback
 
-Issues and feedback can be submitted via GitHub Issues. For questions about the Agent Skills specification itself, visit https://agentskills.io/
+Issues and feedback can be submitted via [GitHub Issues](https://github.com/DecisioNaut/devcontainer-expert/issues). For questions about the Agent Skills specification itself, visit https://agentskills.io/
 
 ---
 
