@@ -1,0 +1,86 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Security Hardened",
+    // Use Dockerfile to create custom secure image
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        "args": {
+            "USER_UID": "1000",
+            "USER_GID": "1000"
+        }
+    },
+    // Run as non-root user
+    "remoteUser": "devuser",
+    "containerUser": "devuser",
+    // Match local user UID/GID on Linux
+    "updateRemoteUserUID": true,
+    // Mount SSH keys as read-only
+    "mounts": [
+        "source=${localEnv:HOME}/.ssh,target=/home/devuser/.ssh,readonly,type=bind",
+        "source=${localEnv:HOME}/.gnupg,target=/home/devuser/.gnupg,readonly,type=bind"
+    ],
+    // Pass secrets via environment variables (not committed!)
+    "remoteEnv": {
+        "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN:}",
+        "NPM_TOKEN": "${localEnv:NPM_TOKEN:}",
+        "DATABASE_URL": "${localEnv:DATABASE_URL:postgresql://localhost/mydb}"
+    },
+    // Document required secrets
+    "secrets": {
+        "GITHUB_TOKEN": {
+            "description": "Personal access token for GitHub API access",
+            "documentationUrl": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+        },
+        "NPM_TOKEN": {
+            "description": "NPM authentication token for private packages",
+            "documentationUrl": "https://docs.npmjs.com/about-access-tokens"
+        },
+        "DATABASE_URL": {
+            "description": "PostgreSQL connection string"
+        }
+    },
+    // Minimal capabilities - only add what's needed
+    "capAdd": [],
+    // No privileged mode
+    "privileged": false,
+    // Keep default security options (no relaxation)
+    "securityOpt": [],
+    // Use init for proper signal handling
+    "init": true,
+    // Don't override image command
+    "overrideCommand": false,
+    // Port forwarding with explicit configuration
+    "forwardPorts": [
+        3000
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Application",
+            "protocol": "https",
+            "onAutoForward": "notify"
+        }
+    },
+    // Other ports are silently handled
+    "otherPortsAttributes": {
+        "onAutoForward": "silent"
+    },
+    // Install dependencies without running as root
+    "postCreateCommand": "npm ci --production",
+    // Minimal extensions
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ],
+            "settings": {
+                "files.exclude": {
+                    "**/.env": true,
+                    "**/.env.local": true,
+                    "**/secrets": true
+                }
+            }
+        }
+    }
+}

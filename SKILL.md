@@ -154,7 +154,7 @@ VS Code will build the container and reopen your workspace inside it.
 **Container Definition:**
 - `name`: Display name for the container
 - `image`: Pre-built Docker image to use
-- `build`: Build configuration (dockerfile, context, args)
+- `build`: Build configuration (dockerfile, context, args, target, cacheFrom, options)
 - `dockerComposeFile`: Path to docker-compose.yml file
 - `service`: Docker Compose service name to connect to
 
@@ -163,22 +163,50 @@ VS Code will build the container and reopen your workspace inside it.
 - `workspaceMount`: Custom workspace mount configuration
 - `mounts`: Additional volume/bind mounts
 - `containerEnv`: Environment variables for the container
+- `containerUser`: User for starting the container (default: image default)
 - `remoteUser`: User to run as inside container (default: root or image default)
+- `remoteEnv`: Environment variables for remote processes and IDE server
+- `updateRemoteUserUID`: Update container user's UID/GID to match local user (Linux only)
 
 **Port Forwarding:**
 - `forwardPorts`: Array of ports to forward (e.g., `[3000, 8080]`)
-- `portsAttributes`: Configure port labels, protocols, and visibility
+- `appPort`: Application ports exposed by container (deprecated in favor of `forwardPorts`)
+- `portsAttributes`: Configure port labels, protocols, auto-forward behavior, and elevation
+- `otherPortsAttributes`: Default properties for ports not explicitly configured
 
 **Lifecycle Scripts:**
+- `initializeCommand`: Runs locally before anything else
 - `onCreateCommand`: Runs once when container is created
 - `updateContentCommand`: Runs when container config changes
 - `postCreateCommand`: Runs after container creation (often used for `npm install`, `pip install`)
 - `postStartCommand`: Runs every time the container starts
 - `postAttachCommand`: Runs every time you attach to the container
+- `waitFor`: Which command to wait for before starting UI (default: `updateContentCommand`)
+
+**Advanced Container Options:**
+- `runArgs`: Additional Docker run arguments
+- `init`: Pass `--init` flag for proper signal handling
+- `privileged`: Run container in privileged mode
+- `capAdd`: Docker capabilities to add
+- `securityOpt`: Docker security options
+- `overrideCommand`: Override the default command from the image
+- `shutdownAction`: Action when disconnecting (`none` or `stopContainer`/`stopCompose`)
+
+**Features and Environment:**
+- `features`: Features to add to the container
+- `overrideFeatureInstallOrder`: Control the order Features are installed
+- `userEnvProbe`: How to load user environment (`none`, `loginShell`, `loginInteractiveShell`, `interactiveShell`)
+
+**Host Requirements:**
+- `hostRequirements`: Minimum host hardware (cpus, memory, storage, gpu)
+
+**Security and Secrets:**
+- `secrets`: Recommended secrets with descriptions and documentation URLs
 
 **VS Code Customization:**
 - `customizations.vscode.extensions`: Extensions to install in the container
 - `customizations.vscode.settings`: VS Code settings for the container
+- `customizations`: Tool-specific customizations for other editors/tools
 
 ## Working with Dev Container Features
 
@@ -241,6 +269,369 @@ Features follow semantic versioning. You can pin to specific versions:
 You can create your own Features using the [feature-starter template](https://github.com/devcontainers/feature-starter). Each Feature is a folder with:
 - `devcontainer-feature.json` - Metadata and options
 - `install.sh` - Installation script
+
+### Controlling Feature Installation Order
+
+By default, Features are installed in an implementation-defined order. To control this:
+
+```json
+{
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/common-utils",
+    "ghcr.io/devcontainers/features/node",
+    "ghcr.io/devcontainers/features/docker-in-docker"
+  ]
+}
+```
+
+## Advanced Property Reference
+
+### Host Requirements
+
+Specify minimum hardware requirements for the host machine. Useful for GPU workloads or resource-intensive applications:
+
+```json
+{
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb",
+    "gpu": true
+  }
+}
+```
+
+**GPU Configuration Options:**
+- `true` - GPU required
+- `false` - No GPU needed  
+- `"optional"` - GPU is optional
+- Object with `cores` and `memory` for detailed requirements
+
+```json
+{
+  "hostRequirements": {
+    "gpu": {
+      "cores": 2,
+      "memory": "4gb"
+    }
+  }
+}
+```
+
+### Port Configuration Advanced
+
+**Port Attributes** provide fine-grained control over forwarded ports:
+
+```json
+{
+  "forwardPorts": [3000, 5000, 8080],
+  "portsAttributes": {
+    "3000": {
+      "label": "Web App",
+      "onAutoForward": "openBrowser",
+      "protocol": "https",
+      "elevateIfNeeded": false,
+      "requireLocalPort": true
+    },
+    "5000-5999": {
+      "onAutoForward": "ignore"
+    },
+    ".+\\/server\\.js": {
+      "onAutoForward": "openPreview"
+    }
+  },
+  "otherPortsAttributes": {
+    "onAutoForward": "silent"
+  }
+}
+```
+
+**Port Attribute Properties:**
+- `label`: Display name for the port in UI
+- `onAutoForward`: `notify` | `openBrowser` | `openBrowserOnce` | `openPreview` | `silent` | `ignore`
+- `protocol`: `http` | `https`
+- `elevateIfNeeded`: Auto-elevate for privileged ports (< 1024)
+- `requireLocalPort`: Show modal if local port unavailable
+
+**otherPortsAttributes** sets defaults for all ports not explicitly configured.
+
+### Lifecycle Scripts and Execution Control
+
+**Understanding Lifecycle Order:**
+1. `initializeCommand` - Runs on **local machine** before creating container
+2. `onCreateCommand` - Runs once when container is first created
+3. `updateContentCommand` - Runs on create and when workspace content changes
+4. `postCreateCommand` - Runs after create/update
+5. `postStartCommand` - Runs every time container starts
+6. `postAttachCommand` - Runs every time you attach to container
+
+**Script Format Options:**
+- **String**: Runs in shell (e.g., `"npm install"`)
+- **Array**: Runs as single command without shell (e.g., `["npm", "install"]`)
+- **Object**: Runs multiple commands in parallel
+
+```json
+{
+  "initializeCommand": "echo 'Starting local setup'",
+  "postCreateCommand": {
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd frontend && npm install",
+    "setup-db": ["node", "scripts/setup-db.js"]
+  }
+}
+```
+
+**waitFor Property:**
+
+Controls which lifecycle script to wait for before starting the UI (default: `updateContentCommand`):
+
+```json
+{
+  "waitFor": "postCreateCommand"
+}
+```
+
+Options: `initializeCommand` | `onCreateCommand` | `updateContentCommand` | `postCreateCommand` | `postStartCommand`
+
+### Environment Variables and User Configuration
+
+**Container vs. Remote Environment:**
+- `containerEnv`: Set for all container processes
+- `remoteEnv`: Set for remote editor/IDE and lifecycle scripts only
+
+```json
+{
+  "containerEnv": {
+    "NODE_ENV": "development",
+    "DATABASE_URL": "postgresql://db:5432/mydb"
+  },
+  "remoteEnv": {
+    "EDITOR": "code --wait",
+    "PATH": "${containerEnv:PATH}:/custom/bin"
+  }
+}
+```
+
+**User Environment Probe:**
+
+Controls how user shell environment is loaded (default: `loginInteractiveShell`):
+
+```json
+{
+  "userEnvProbe": "loginShell"
+}
+```
+
+Options:
+- `none` - Don't probe user environment
+- `loginShell` - Source login shell profile
+- `loginInteractiveShell` - Source login and interactive profiles (default)
+- `interactiveShell` - Source interactive shell profile only
+
+**User ID Mapping (Linux):**
+
+On Linux, automatically update container user UID/GID to match local user:
+
+```json
+{
+  "updateRemoteUserUID": true
+}
+```
+
+### Container Runtime Options
+
+**Additional Docker Arguments:**
+
+```json
+{
+  "runArgs": [
+    "--network=host",
+    "--add-host=api.local:127.0.0.1"
+  ]
+}
+```
+
+**Init Process** (proper signal handling):
+
+```json
+{
+  "init": true
+}
+```
+
+Passes `--init` flag to Docker, using [tini](https://github.com/krallin/tini) for proper PID 1 process handling and signal forwarding.
+
+**Privileged Mode and Capabilities:**
+
+```json
+{
+  "privileged": true,
+  "capAdd": ["SYS_PTRACE", "NET_ADMIN"],
+  "securityOpt": ["seccomp=unconfined"]
+}
+```
+
+⚠️ **Security Warning**: Only use `privileged` and relaxed security options when absolutely necessary (e.g., Docker-in-Docker, debugging with ptrace).
+
+**Shutdown Behavior:**
+
+Controls what happens when you disconnect from the container:
+
+```json
+{
+  "shutdownAction": "stopContainer"  // or "none"
+}
+```
+
+For Docker Compose:
+```json
+{
+  "shutdownAction": "stopCompose"  // or "none"
+}
+```
+
+**Override Default Command:**
+
+```json
+{
+  "overrideCommand": false
+}
+```
+
+Set to `false` to keep the image's default command (useful for images with custom entrypoints).
+
+### Build Configuration Advanced
+
+**Multi-Stage Builds:**
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "target": "development"
+  }
+}
+```
+
+**Build Cache:**
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "cacheFrom": [
+      "ghcr.io/myorg/myproject-devcontainer:main",
+      "ghcr.io/myorg/myproject-devcontainer:cache"
+    ]
+  }
+}
+```
+
+**Additional Build Options:**
+
+```json
+{
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "NODE_VERSION": "20",
+      "VARIANT": "bullseye"
+    },
+    "options": [
+      "--no-cache",
+      "--progress=plain"
+    ]
+  }
+}
+```
+
+### Docker Compose Advanced
+
+**Selective Service Start:**
+
+Control which services start (by default all services start):
+
+```json
+{
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "runServices": ["app", "db"]
+}
+```
+
+Only `app` and `db` will start, even if other services are defined.
+
+### Secrets Management
+
+Document recommended secrets for your dev container:
+
+```json
+{
+  "secrets": {
+    "GITHUB_TOKEN": {
+      "description": "Personal access token for GitHub API",
+      "documentationUrl": "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+    },
+    "DATABASE_PASSWORD": {
+      "description": "Password for PostgreSQL database"
+    }
+  }
+}
+```
+
+These are **documentation only** - they don't create or inject secrets. Users must provide them via:
+- `remoteEnv` with `${localEnv:SECRET_NAME}` syntax
+- Mounted files via `mounts`
+- Docker secrets (Compose)
+
+See [references/SECURITY.md](references/SECURITY.md) for secure secrets handling.
+
+### Variable Substitution in devcontainer.json
+
+Dev containers support variable substitution in configuration values using `${variable}` syntax:
+
+**Available Variables:**
+
+- `${localEnv:NAME}` - Environment variable from your **local machine**
+- `${containerEnv:NAME}` - Environment variable from the **container** (set via `containerEnv`)
+- `${localWorkspaceFolder}` - Path to workspace folder on **local machine**
+- `${containerWorkspaceFolder}` - Path to workspace folder **inside container**
+- `${localWorkspaceFolderBasename}` - Basename of workspace folder on **local machine**
+- `${containerWorkspaceFolderBasename}` - Basename of workspace folder **inside container**
+
+**Examples:**
+
+```json
+{
+  "remoteEnv": {
+    "API_KEY": "${localEnv:API_KEY}",
+    "PATH": "${containerEnv:PATH}:/custom/bin",
+    "PROJECT_ROOT": "${containerWorkspaceFolder}"
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,readonly,type=bind",
+    "source=${localWorkspaceFolder}/../shared,target=${containerWorkspaceFolder}/shared,type=bind"
+  ]
+}
+```
+
+**Default Values:**
+
+```json
+{
+  "remoteEnv": {
+    "OPTIONAL_VAR": "${localEnv:OPTIONAL_VAR:default_value}"
+  }
+}
+```
+
+If `OPTIONAL_VAR` is not set locally, `default_value` will be used.
 
 ## Common Workflows
 
@@ -342,6 +733,7 @@ services:
 
 For in-depth coverage of advanced scenarios, see the [references/](references/) directory:
 
+- **[JSON Schema Complete Reference](references/JSON_SCHEMA_REFERENCE.md)** - Comprehensive documentation of all devcontainer.json properties
 - **[Pre-building Images](references/PREBUILDING.md)** - Image caching, CI/CD workflows, supply-chain security
 - **[Kubernetes Integration](references/KUBERNETES.md)** - Attach to K8s pods, cluster development
 - **[Networking Fundamentals](references/NETWORKING.md)** - Docker network modes, port forwarding, DNS, proxies

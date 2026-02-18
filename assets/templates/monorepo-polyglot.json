@@ -1,0 +1,102 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Monorepo - Polyglot",
+    // Start with base image and add multiple language runtimes
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    // Add multiple language runtimes and tools
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "20"
+        },
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.11"
+        },
+        "ghcr.io/devcontainers/features/go:1": {
+            "version": "1.21"
+        },
+        "ghcr.io/devcontainers/features/rust:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "version": "latest",
+            "moby": true
+        },
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "installOhMyZsh": true
+        }
+    },
+    // Ensure base tools are installed before languages
+    "overrideFeatureInstallOrder": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/git",
+        "ghcr.io/devcontainers/features/docker-in-docker",
+        "ghcr.io/devcontainers/features/node",
+        "ghcr.io/devcontainers/features/python",
+        "ghcr.io/devcontainers/features/go",
+        "ghcr.io/devcontainers/features/rust",
+        "ghcr.io/devcontainers/features/github-cli"
+    ],
+    // Install dependencies for all packages in parallel
+    "postCreateCommand": {
+        "install-frontend": "cd packages/frontend && npm install",
+        "install-backend": "cd packages/backend && npm install",
+        "install-api": "cd packages/api && go mod download",
+        "install-cli": "cd packages/cli && cargo build",
+        "install-ml": "cd packages/ml && pip install -r requirements.txt"
+    },
+    // Forward common ports for different services
+    "forwardPorts": [
+        3000,
+        8080,
+        5000,
+        9000
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Frontend (Node)"
+        },
+        "8080": {
+            "label": "API (Go)"
+        },
+        "5000": {
+            "label": "ML Service (Python)"
+        },
+        "9000": {
+            "label": "CLI Server (Rust)"
+        }
+    },
+    // Use non-root user
+    "remoteUser": "vscode",
+    // Specify minimum host requirements for heavy workload
+    "hostRequirements": {
+        "cpus": 4,
+        "memory": "8gb",
+        "storage": "32gb"
+    },
+    // Multi-language extensions
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // JavaScript/TypeScript
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                // Python
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                // Go
+                "golang.go",
+                // Rust
+                "rust-lang.rust-analyzer",
+                // General
+                "ms-azuretools.vscode-docker",
+                "eamodio.gitlens"
+            ],
+            "settings": {
+                "editor.formatOnSave": true
+            }
+        }
+    }
+}

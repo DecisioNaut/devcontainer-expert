@@ -1,0 +1,59 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Full Stack App with PostgreSQL",
+    // Use Docker Compose for multi-service setup
+    "dockerComposeFile": "docker-compose.yml",
+    // Connect to the 'app' service
+    "service": "app",
+    // Only start these services (omit test/staging services)
+    "runServices": [
+        "app",
+        "db",
+        "redis"
+    ],
+    // Workspace location inside container
+    "workspaceFolder": "/workspace",
+    // Install dependencies in parallel
+    "postCreateCommand": {
+        "install-backend": "cd backend && npm install",
+        "install-frontend": "cd frontend && npm install",
+        "setup-db": "npm run db:migrate"
+    },
+    // Wait for all installations before starting UI
+    "waitFor": "postCreateCommand",
+    // Forward application and database ports
+    "forwardPorts": [
+        3000,
+        5432,
+        6379
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Frontend",
+            "onAutoForward": "openBrowser"
+        },
+        "5432": {
+            "label": "PostgreSQL",
+            "onAutoForward": "silent"
+        },
+        "6379": {
+            "label": "Redis",
+            "onAutoForward": "silent"
+        }
+    },
+    // Keep containers running when disconnected
+    "shutdownAction": "none",
+    // Extensions for full-stack development
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker",
+                "ms-vscode.vscode-typescript-next",
+                "mtxr.sqltools",
+                "mtxr.sqltools-driver-pg"
+            ]
+        }
+    }
+}

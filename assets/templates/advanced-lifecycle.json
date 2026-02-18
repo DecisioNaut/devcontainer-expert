@@ -1,0 +1,55 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Advanced Lifecycle",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+    // Run locally before container creation (e.g., check prerequisites)
+    "initializeCommand": {
+        "check-docker": "docker --version",
+        "check-env": "test -f .env || echo 'Warning: .env file not found'"
+    },
+    // Run once on container creation (e.g., set up workspace structure)
+    "onCreateCommand": [
+        "mkdir",
+        "-p",
+        "logs",
+        "temp",
+        "cache"
+    ],
+    // Run when content changes (e.g., update git submodules)
+    "updateContentCommand": "git submodule update --init --recursive",
+    // Run after creation (install dependencies in parallel)
+    "postCreateCommand": {
+        "install-backend": "cd packages/backend && npm install",
+        "install-frontend": "cd packages/frontend && npm install",
+        "install-shared": "cd packages/shared && npm install",
+        "build-shared": "cd packages/shared && npm run build"
+    },
+    // Run every time container starts (start background services)
+    "postStartCommand": {
+        "start-mock-api": "npm run mock-api &",
+        "start-watch": "npm run watch &"
+    },
+    // Run every time you attach (show welcome message)
+    "postAttachCommand": "cat .devcontainer/welcome.txt || echo 'Welcome!'",
+    // Wait for dependency installation before starting UI
+    "waitFor": "postCreateCommand",
+    // Environment variables
+    "containerEnv": {
+        "NODE_ENV": "development",
+        "LOG_LEVEL": "debug"
+    },
+    "remoteEnv": {
+        "API_KEY": "${localEnv:API_KEY:}",
+        "PATH": "${containerEnv:PATH}:${containerWorkspaceFolder}/node_modules/.bin"
+    },
+    // Use proper signal handling for background processes
+    "init": true,
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Multi-Stage Build",
+    // Build from Dockerfile with multi-stage target
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        // Target the 'development' stage in multi-stage build
+        "target": "development",
+        "args": {
+            "NODE_VERSION": "20",
+            "VARIANT": "bullseye"
+        },
+        // Use previous builds as cache
+        "cacheFrom": [
+            "ghcr.io/myorg/myproject-devcontainer:main",
+            "ghcr.io/myorg/myproject-devcontainer:cache"
+        ],
+        // Additional build options
+        "options": [
+            "--progress=plain"
+        ]
+    },
+    // Custom workspace mount with optimized consistency
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+    // Build application in stages
+    "postCreateCommand": {
+        "install": "npm ci",
+        "build": "npm run build"
+    },
+    // Environment variables for build
+    "containerEnv": {
+        "NODE_ENV": "development",
+        "BUILD_TARGET": "development"
+    },
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:/workspace/node_modules/.bin"
+    },
+    // Run as non-root
+    "remoteUser": "node",
+    // Forward application port
+    "forwardPorts": [
+        3000
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Application",
+            "onAutoForward": "openBrowser"
+        }
+    },
+    // Specify minimum requirements for build
+    "hostRequirements": {
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "16gb"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+}

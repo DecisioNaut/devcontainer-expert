@@ -5,6 +5,67 @@ All notable changes to the devcontainer-expert skill will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-02-18
+
+### Added
+- **Complete JSON Schema Reference** (`references/JSON_SCHEMA_REFERENCE.md`, 841 lines)
+  - Comprehensive documentation of all devcontainer.json properties
+  - Organized by category: general, container source, lifecycle, ports, environment, users, features, etc.
+  - Full variable substitution guide with all available variables
+  - Practical examples for every property
+  - Best practices and security considerations
+  - Based on official Development Containers Specification schema
+
+- **7 Practical Templates** (`assets/templates/`)
+  - `basic-node.json` - Simple Node.js/TypeScript starter
+  - `python-with-features.json` - Python with Features demonstration
+  - `docker-compose.json` - Multi-service full-stack application
+  - `advanced-lifecycle.json` - Complex lifecycle script patterns
+  - `monorepo-polyglot.json` - Multi-language monorepo setup
+  - `security-hardened.json` - Security-focused best practices
+  - `dockerfile-multistage.json` - Custom Dockerfile with multi-stage builds
+  - `templates/README.md` - Template usage guide and selection matrix
+
+- **Expanded Property Coverage in SKILL.md**
+  - `hostRequirements` - CPU, memory, storage, GPU specifications
+  - `secrets` - Documented secret recommendations
+  - `overrideFeatureInstallOrder` - Control Feature installation sequence
+  - `waitFor` - Control lifecycle script waiting behavior
+  - `userEnvProbe` - Environment variable loading strategies
+  - `updateRemoteUserUID` - UID/GID mapping for Linux
+  - `init` - Signal handling with tini
+  - `privileged`, `capAdd`, `securityOpt` - Security and capabilities
+  - `runArgs` - Additional Docker run arguments
+  - `shutdownAction` - Disconnect behavior control
+  - `overrideCommand` - Command override control
+  - `otherPortsAttributes` - Default port configuration
+  - `elevateIfNeeded`, `requireLocalPort` - Advanced port options
+  - `onAutoForward` options - Complete auto-forward behavior coverage
+  - `target`, `cacheFrom`, `options` - Advanced build configuration
+  - `runServices` - Docker Compose selective service startup
+  - Variable substitution - Complete guide with all variables and default values
+
+### Improved
+- **Key Configuration Properties section** restructured with comprehensive property lists
+- **Advanced Property Reference section** added with detailed examples for:
+  - Host requirements and GPU configuration
+  - Advanced port configuration patterns
+  - Lifecycle scripts execution control
+  - Environment variables and user configuration
+  - Container runtime options
+  - Build configuration advanced options
+  - Docker Compose advanced patterns
+  - Secrets management patterns
+- **Variable substitution** fully documented with practical examples
+- More detailed examples for complex scenarios
+- Cross-referenced JSON Schema Reference in Advanced Topics
+- README updated to include templates and schema reference
+
+### Changed
+- Enhanced SKILL.md from ~478 to ~650+ lines with new property coverage
+- Reorganized configuration properties for better discoverability
+- Added practical examples for previously undocumented properties
+
 ## [2.0.0] - 2026-02-14
 
 ### Changed

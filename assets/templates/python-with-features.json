@@ -1,0 +1,70 @@
+{
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+    "name": "Python with Features",
+    // Start with base Ubuntu image
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    // Add Python and common tools via Features
+    "features": {
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.11",
+            "installTools": true
+        },
+        "ghcr.io/devcontainers/features/git:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": true,
+            "installOhMyZsh": true,
+            "upgradePackages": true
+        }
+    },
+    // Control Feature installation order
+    "overrideFeatureInstallOrder": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/git",
+        "ghcr.io/devcontainers/features/python",
+        "ghcr.io/devcontainers/features/github-cli"
+    ],
+    // Set up Python environment after creation
+    "postCreateCommand": "pip install -r requirements.txt",
+    // Run as non-root user
+    "remoteUser": "vscode",
+    // Forward Jupyter and Flask default ports
+    "forwardPorts": [
+        8888,
+        5000
+    ],
+    "portsAttributes": {
+        "8888": {
+            "label": "Jupyter",
+            "onAutoForward": "openBrowser"
+        },
+        "5000": {
+            "label": "Flask App",
+            "onAutoForward": "notify"
+        }
+    },
+    // VS Code Python extensions
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.black-formatter",
+                "charliermarsh.ruff"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.formatting.provider": "none",
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
+                }
+            }
+        }
+    }
+}

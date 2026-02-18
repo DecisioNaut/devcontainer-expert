@@ -22,6 +22,7 @@ This skill provides comprehensive knowledge and step-by-step instructions for cr
 - **Quick Troubleshooting**: Common issues and solutions
 
 ### Advanced Topics (references/)
+- **[JSON Schema Complete Reference](references/JSON_SCHEMA_REFERENCE.md)**: Comprehensive documentation of all devcontainer.json properties
 - **[Pre-building Images](references/PREBUILDING.md)**: Image caching, CI/CD workflows, supply-chain security
 - **[Kubernetes Integration](references/KUBERNETES.md)**: Attach to K8s pods, cluster development workflows
 - **[Networking Fundamentals](references/NETWORKING.md)**: Docker network modes, port forwarding, DNS, proxies
@@ -36,13 +37,15 @@ This skill provides comprehensive knowledge and step-by-step instructions for cr
 
 ### For Agents
 
-Read [SKILL.md](SKILL.md) for core devcontainer patterns and common workflows. For advanced topics (pre-building, Kubernetes, networking, security, etc.), consult the specialized guides in [references/](references/).
+Read [SKILL.md](SKILL.md) for core devcontainer patterns and common workflows. For advanced topics (pre-building, Kubernetes, networking, security, etc.), consult the specialized guides in [references/](references/). Use [assets/templates/](assets/templates/) for practical starting points.
 
 ### For Human Developers
 
 This skill is designed for AI agents, but humans can also use it as a comprehensive reference guide:
 - Start with [SKILL.md](SKILL.md) for core concepts and workflows
+- Browse [assets/templates/](assets/templates/) for copy-paste starting points
 - Explore [references/](references/) for in-depth coverage of advanced scenarios
+- Check [references/JSON_SCHEMA_REFERENCE.md](references/JSON_SCHEMA_REFERENCE.md) for complete property documentation
 
 ## Prerequisites
 
@@ -79,26 +82,45 @@ Here's a simple devcontainer.json to get started:
 ## Topics Covered
 
 ### Core Topics (SKILL.md)
-- ✅ devcontainer.json configuration
-- ✅ Templates and Features
+- ✅ devcontainer.json configuration (all properties documented)
+- ✅ Templates and Features (with installation order control)
 - ✅ Docker and Docker Compose integration
 - ✅ Monorepo strategies (multiple containers)
 - ✅ VS Code workflows and commands
-- ✅ Lifecycle scripts (onCreate, postCreate, postStart, etc.)
-- ✅ Port forwarding and networking basics
-- ✅ Environment variables and mounts
+- ✅ Lifecycle scripts (with waitFor and parallel execution)
+- ✅ Port forwarding and networking basics (with advanced attributes)
+- ✅ Environment variables and mounts (containerEnv vs remoteEnv)
+- ✅ Variable substitution (localEnv, containerEnv, workspace paths)
+- ✅ User configuration (remoteUser, containerUser, UID mapping)
+- ✅ Host requirements (CPU, memory, storage, GPU)
+- ✅ Security options (privileged, capabilities, init)
+- ✅ Secrets management documentation
 - ✅ Git credentials sharing
 - ✅ Common troubleshooting scenarios
 
 ### Advanced Topics (references/)
-- ✅ Pre-building images for CI/CD
-- ✅ Kubernetes pod attachment
-- ✅ Custom Docker networks and DNS
-- ✅ Volume performance optimization
-- ✅ Docker-in-Docker (container-in-container)
-- ✅ Security hardening and secrets management
-- ✅ Dotfiles and personalization
-- ✅ Recovery containers and debugging
+- **[JSON Schema Complete Reference](references/JSON_SCHEMA_REFERENCE.md)**: Comprehensive documentation of all devcontainer.json properties
+- **[Pre-building Images](references/PREBUILDING.md)**: Image caching, CI/CD workflows, supply-chain security
+- **[Kubernetes Integration](references/KUBERNETES.md)**: Attach to K8s pods, cluster development workflows
+- **[Networking Fundamentals](references/NETWORKING.md)**: Docker network modes, port forwarding, DNS, proxies
+- **[Advanced Networking](references/NETWORKING_ADVANCED.md)**: VPN, network security, service mesh, load balancing
+- **[Volume Performance](references/VOLUME_PERFORMANCE.md)**: Optimize disk performance on Windows/macOS
+- **[Container-in-Container](references/CONTAINER_IN_CONTAINER.md)**: Docker-in-Docker for CI/CD testing
+- **[Security Hardening](references/SECURITY.md)**: Non-root users, secrets management, capabilities
+- **[Dotfiles & Personalization](references/DOTFILES.md)**: Shell customization, tool configuration
+- **[Recovery & Debugging](references/RECOVERY_DEBUGGING.md)**: Fix build failures, inspect containers
+
+### Templates (assets/templates/)
+Ready-to-use devcontainer.json templates:
+- **[basic-node.json](assets/templates/basic-node.json)**: Simple Node.js/TypeScript starter
+- **[python-with-features.json](assets/templates/python-with-features.json)**: Python with Features
+- **[docker-compose.json](assets/templates/docker-compose.json)**: Multi-service full-stack app
+- **[advanced-lifecycle.json](assets/templates/advanced-lifecycle.json)**: Complex lifecycle patterns
+- **[monorepo-polyglot.json](assets/templates/monorepo-polyglot.json)**: Multi-language monorepo
+- **[security-hardened.json](assets/templates/security-hardened.json)**: Security best practices
+- **[dockerfile-multistage.json](assets/templates/dockerfile-multistage.json)**: Multi-stage builds
+
+See [assets/templates/README.md](assets/templates/README.md) for usage guide.
 
 ## Resources
 
