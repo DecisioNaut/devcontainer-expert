@@ -144,6 +144,20 @@ VS Code will build the container and reopen your workspace inside it.
 }
 ```
 
+## Ready-to-Use Templates
+
+For quick starts, this skill includes practical, copy-paste devcontainer.json templates in `assets/templates/`:
+
+- **[basic-node.json](assets/templates/basic-node.json)** - Simple Node.js/TypeScript starter
+- **[python-with-features.json](assets/templates/python-with-features.json)** - Python with Features demonstration  
+- **[docker-compose.json](assets/templates/docker-compose.json)** - Multi-service full-stack app
+- **[advanced-lifecycle.json](assets/templates/advanced-lifecycle.json)** - Complex lifecycle patterns
+- **[monorepo-polyglot.json](assets/templates/monorepo-polyglot.json)** - Multi-language monorepo
+- **[security-hardened.json](assets/templates/security-hardened.json)** - Security best practices
+- **[dockerfile-multistage.json](assets/templates/dockerfile-multistage.json)** - Custom Dockerfile with multi-stage builds
+
+Each template is fully commented and demonstrates different patterns. **For detailed template descriptions, selection guidance, and usage instructions**, see [references/TEMPLATES_GUIDE.md](references/TEMPLATES_GUIDE.md).
+
 ### Key Configuration Properties
 
 **Container Definition:**
@@ -396,6 +410,7 @@ services:
 
 For in-depth coverage of advanced scenarios, see the [references/](references/) directory:
 
+- **[Templates Guide](references/TEMPLATES_GUIDE.md)** - Detailed template descriptions and selection guidance
 - **[JSON Schema Complete Reference](references/JSON_SCHEMA_REFERENCE.md)** - Comprehensive documentation of all devcontainer.json properties
 - **[Pre-building Images](references/PREBUILDING.md)** - Image caching, CI/CD workflows, supply-chain security
 - **[Kubernetes Integration](references/KUBERNETES.md)** - Attach to K8s pods, cluster development

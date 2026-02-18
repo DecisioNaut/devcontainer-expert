@@ -1,10 +1,10 @@
-# Dev Container Templates
+# Dev Container Templates Guide
 
-This directory contains practical, copy-paste devcontainer.json templates for common scenarios. Each template is fully commented and follows best practices from the [JSON Schema Reference](../references/JSON_SCHEMA_REFERENCE.md).
+This guide documents the practical, copy-paste devcontainer.json templates available in `assets/templates/`. Each template is fully commented and follows best practices from the [JSON Schema Reference](JSON_SCHEMA_REFERENCE.md).
 
 ## Available Templates
 
-### [basic-node.json](basic-node.json)
+### [basic-node.json](../assets/templates/basic-node.json)
 Simple Node.js/TypeScript setup with:
 - Official Microsoft Node.js image
 - ESLint and Prettier
@@ -15,7 +15,7 @@ Simple Node.js/TypeScript setup with:
 
 ---
 
-### [python-with-features.json](python-with-features.json)
+### [python-with-features.json](../assets/templates/python-with-features.json)
 Python development with Features:
 - Base Ubuntu image + Python Feature
 - Git, GitHub CLI, and common utilities
@@ -27,7 +27,7 @@ Python development with Features:
 
 ---
 
-### [docker-compose.json](docker-compose.json)
+### [docker-compose.json](../assets/templates/docker-compose.json)
 Multi-service full-stack application:
 - Docker Compose integration
 - PostgreSQL and Redis services
@@ -39,7 +39,7 @@ Multi-service full-stack application:
 
 ---
 
-### [advanced-lifecycle.json](advanced-lifecycle.json)
+### [advanced-lifecycle.json](../assets/templates/advanced-lifecycle.json)
 Complex lifecycle script patterns:
 - All lifecycle hooks demonstrated
 - Local prerequisite checks
@@ -52,7 +52,7 @@ Complex lifecycle script patterns:
 
 ---
 
-### [monorepo-polyglot.json](monorepo-polyglot.json)
+### [monorepo-polyglot.json](../assets/templates/monorepo-polyglot.json)
 Multi-language monorepo setup:
 - Node.js, Python, Go, and Rust
 - Docker-in-Docker for containerized workflows
@@ -65,7 +65,7 @@ Multi-language monorepo setup:
 
 ---
 
-### [security-hardened.json](security-hardened.json)
+### [security-hardened.json](../assets/templates/security-hardened.json)
 Security-focused configuration:
 - Non-root user setup
 - Read-only secret mounting
@@ -79,7 +79,7 @@ Security-focused configuration:
 
 ---
 
-### [dockerfile-multistage.json](dockerfile-multistage.json)
+### [dockerfile-multistage.json](../assets/templates/dockerfile-multistage.json)
 Custom Dockerfile with multi-stage builds:
 - Multi-stage build target selection
 - Build cache configuration
@@ -103,19 +103,19 @@ Custom Dockerfile with multi-stage builds:
 
 | Scenario | Recommended Template |
 |----------|---------------------|
-| Simple Node.js app | [basic-node.json](basic-node.json) |
-| Python project | [python-with-features.json](python-with-features.json) |
-| App + database | [docker-compose.json](docker-compose.json) |
-| Complex build | [advanced-lifecycle.json](advanced-lifecycle.json) |
-| Multiple languages | [monorepo-polyglot.json](monorepo-polyglot.json) |
-| Security focus | [security-hardened.json](security-hardened.json) |
-| Custom Dockerfile | [dockerfile-multistage.json](dockerfile-multistage.json) |
+| Simple Node.js app | [basic-node.json](../assets/templates/basic-node.json) |
+| Python project | [python-with-features.json](../assets/templates/python-with-features.json) |
+| App + database | [docker-compose.json](../assets/templates/docker-compose.json) |
+| Complex build | [advanced-lifecycle.json](../assets/templates/advanced-lifecycle.json) |
+| Multiple languages | [monorepo-polyglot.json](../assets/templates/monorepo-polyglot.json) |
+| Security focus | [security-hardened.json](../assets/templates/security-hardened.json) |
+| Custom Dockerfile | [dockerfile-multistage.json](../assets/templates/dockerfile-multistage.json) |
 
 ## Additional Resources
 
-- **[SKILL.md](../../SKILL.md)** - Core concepts and workflows
-- **[JSON Schema Reference](../references/JSON_SCHEMA_REFERENCE.md)** - Complete property documentation
-- **[Security Guide](../references/SECURITY.md)** - Security best practices
+- **[SKILL.md](../SKILL.md)** - Core concepts and workflows
+- **[JSON Schema Reference](JSON_SCHEMA_REFERENCE.md)** - Complete property documentation
+- **[Security Guide](SECURITY.md)** - Security best practices
 - **[Official Templates](https://containers.dev/templates)** - Community templates
 - **[Official Features](https://containers.dev/features)** - Available Features
 
@@ -145,4 +145,4 @@ You can mix patterns from multiple templates:
 
 ## Contributing
 
-Found an issue or have a suggestion for a new template? See [CONTRIBUTING.md](../../CONTRIBUTING.md) or open an issue on the repository.
+Found an issue or have a suggestion for a new template? Open an issue on the [GitHub repository](https://github.com/DecisioNaut/devcontainer-expert).
