@@ -5,6 +5,46 @@ All notable changes to the devcontainer-expert skill will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-02-18
+
+### Changed
+- **BREAKING**: Repository structure reorganized for better separation of concerns
+  - Skill package moved to `devcontainer-expert/` subfolder
+  - Repository documentation (README.md, CHANGELOG.md, LICENSE) remains at root
+  - All skill files (SKILL.md, assets/, references/) now in subfolder
+  - Installation: copy `devcontainer-expert/` folder to agent's skills directory
+  - Git history preserved for all moved files
+
+- **SKILL.md Optimization**
+  - Reduced from 869 to 533 lines (38% reduction)
+  - Removed detailed property documentation (now in JSON_SCHEMA_REFERENCE.md)
+  - Removed optional frontmatter fields (license, metadata, compatibility)
+  - Frontmatter now contains only required fields (name, description)
+  - Maintained all essential guidance and workflows
+  - Improved token efficiency for AI agents
+
+### Added
+- **Installation Instructions** in README.md
+  - Step-by-step guide for AI agents (GitHub Copilot, Claude, custom agents)
+  - Usage guide for human developers
+  - Repository structure diagram
+  - File location reference
+
+### Improved
+- **Agent Skills Specification Compliance**
+  - Frontmatter reduced to required fields only
+  - SKILL.md size within recommended ~500 line target
+  - Clean separation: skill package in subfolder, repo docs at root
+  - No extraneous files in skill package folder
+- All internal links updated to reflect new subfolder structure
+- Progressive disclosure architecture maintained (Level 2)
+- README.md completely rewritten with new structure
+
+### Fixed
+- Validation warnings for SKILL.md size (was 869 lines, now 533)
+- Validation warnings for optional frontmatter fields
+- Improved compatibility with Agent Skills specification
+
 ## [2.1.0] - 2026-02-18
 
 ### Added
