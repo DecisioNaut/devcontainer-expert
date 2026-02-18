@@ -19,10 +19,9 @@ devcontainer-expert/                  # Repository root
 ├── LICENSE                           # MIT License
 ├── .gitignore                        # Git configuration
 └── devcontainer-expert/              # Agent Skill package
-    ├── SKILL.md                      # Main skill file (533 lines)
+    ├── SKILL.md                      # Main skill file (547 lines)
     ├── assets/
     │   └── templates/                # 7 ready-to-use templates
-    │       ├── README.md
     │       ├── basic-node.json
     │       ├── python-with-features.json
     │       ├── docker-compose.json
@@ -31,6 +30,7 @@ devcontainer-expert/                  # Repository root
     │       ├── security-hardened.json
     │       └── dockerfile-multistage.json
     └── references/                   # Advanced topic guides
+        ├── TEMPLATES_GUIDE.md        # Template selection and usage guide
         ├── JSON_SCHEMA_REFERENCE.md  # Complete property documentation
         ├── PREBUILDING.md
         ├── KUBERNETES.md
@@ -57,6 +57,7 @@ The skill package is contained in the `devcontainer-expert/` subfolder, keeping 
 - **Quick Troubleshooting**: Common issues and solutions
 
 ### Advanced Topics (references/)
+- **[Templates Guide](devcontainer-expert/references/TEMPLATES_GUIDE.md)**: Template selection and usage guide
 - **[JSON Schema Complete Reference](devcontainer-expert/references/JSON_SCHEMA_REFERENCE.md)**: Comprehensive documentation of all devcontainer.json properties
 - **[Pre-building Images](devcontainer-expert/references/PREBUILDING.md)**: Image caching, CI/CD workflows, supply-chain security
 - **[Kubernetes Integration](devcontainer-expert/references/KUBERNETES.md)**: Attach to K8s pods, cluster development workflows
@@ -158,6 +159,7 @@ Here's a simple devcontainer.json to get started:
 - ✅ Common troubleshooting scenarios
 
 ### Advanced Topics (references/)
+- **[Templates Guide](devcontainer-expert/references/TEMPLATES_GUIDE.md)**: Template selection and usage guide
 - **[JSON Schema Complete Reference](devcontainer-expert/references/JSON_SCHEMA_REFERENCE.md)**: Comprehensive documentation of all devcontainer.json properties
 - **[Pre-building Images](devcontainer-expert/references/PREBUILDING.md)**: Image caching, CI/CD workflows, supply-chain security
 - **[Kubernetes Integration](devcontainer-expert/references/KUBERNETES.md)**: Attach to K8s pods, cluster development workflows
@@ -179,7 +181,7 @@ Ready-to-use devcontainer.json templates:
 - **[security-hardened.json](devcontainer-expert/assets/templates/security-hardened.json)**: Security best practices
 - **[dockerfile-multistage.json](devcontainer-expert/assets/templates/dockerfile-multistage.json)**: Multi-stage builds
 
-See [devcontainer-expert/assets/templates/README.md](devcontainer-expert/assets/templates/README.md) for usage guide.
+See [devcontainer-expert/references/TEMPLATES_GUIDE.md](devcontainer-expert/references/TEMPLATES_GUIDE.md) for detailed descriptions and selection guidance.
 
 ## Resources
 
@@ -194,7 +196,7 @@ See [devcontainer-expert/assets/templates/README.md](devcontainer-expert/assets/
 
 This is an Agent Skill following the [Agent Skills Specification](https://agentskills.io/). 
 
-**Level 2 Architecture**: This skill uses a Level 2 structure with core patterns in SKILL.md (~533 lines) and advanced topics in references/ (~300-850 lines each).
+**Level 2 Architecture**: This skill uses a Level 2 structure with core patterns in SKILL.md (~547 lines) and advanced topics in references/ (~300-850 lines each).
 
 To contribute:
 1. Fork the repository: https://github.com/DecisioNaut/devcontainer-expert
@@ -219,7 +221,7 @@ This skill follows the [Agent Skills Specification v1.0](https://agentskills.io/
 - ✅ Structured YAML frontmatter with required fields only
 - ✅ Progressive disclosure (skill discovery via name/description)
 - ✅ Clear activation criteria
-- ✅ Level 2 architecture (main file 533 lines + references/)
+- ✅ Level 2 architecture (main file 547 lines + references/)
 - ✅ Comprehensive coverage via specialized reference files
 - ✅ Actionable, step-by-step guidance
 - ✅ Cross-referenced for easy navigation
